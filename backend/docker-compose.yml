@@ -1,3 +1,5 @@
+name: fone-ninja-trading-challenge
+
 services:
   app:
     build:
