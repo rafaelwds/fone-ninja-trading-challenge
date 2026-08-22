@@ -1,0 +1,93 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fntc_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+      - fntc_vendor:/var/www/html/vendor
+    environment:
+      # Sobrescreve o .env montado do host para garantir que o container sempre fale com
+      # os servicos do proprio compose, independente do que estiver configurado localmente.
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: fone_ninja_trading
+      DB_USERNAME: fone_ninja
+      DB_PASSWORD: fone_ninja
+      CACHE_STORE: redis
+      REDIS_CLIENT: predis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SESSION_DRIVER: database
+      QUEUE_CONNECTION: database
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - fntc
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: fntc_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - fntc
+
+  mysql:
+    image: mysql:8.0
+    container_name: fntc_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: fone_ninja_trading
+      MYSQL_USER: fone_ninja
+      MYSQL_PASSWORD: fone_ninja
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - fntc_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    networks:
+      - fntc
+
+  redis:
+    image: redis:7-alpine
+    container_name: fntc_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - fntc_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    networks:
+      - fntc
+
+volumes:
+  fntc_mysql_data:
+  fntc_redis_data:
+  fntc_vendor:
+
+networks:
+  fntc:
+    driver: bridge
