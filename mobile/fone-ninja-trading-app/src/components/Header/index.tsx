@@ -10,9 +10,11 @@ export type HeaderProps = {
   variant: HeaderVariant;
   title: string;
   subtitle?: string;
+  /** Preco atual do BTC ja formatado (ex: "R$ 214.570,55"), usado na variante "negociar". */
+  priceLabel?: string;
 };
 
-export function Header({ variant, title, subtitle }: HeaderProps) {
+export function Header({ variant, title, priceLabel }: HeaderProps) {
   const name = useAuthStore((state) => state.user?.name);
 
   return (
@@ -41,8 +43,7 @@ export function Header({ variant, title, subtitle }: HeaderProps) {
             <S.TitleScreen>{title}</S.TitleScreen>
           </S.ViewLeft>
           <S.ViewRight variant="negotiate">
-            <S.TextPrice>R$ 200.000,00</S.TextPrice>
-            <S.TextPorcentage>+ 5,00%</S.TextPorcentage>
+            <S.TextPrice>{priceLabel ?? '—'}</S.TextPrice>
           </S.ViewRight>
         </S.ViewContainer>
       )}

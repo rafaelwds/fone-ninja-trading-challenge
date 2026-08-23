@@ -1,26 +1,79 @@
 import { FlashList } from '@shopify/flash-list';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { RefreshControl } from 'react-native';
+import { useTheme } from 'styled-components/native';
 
 import { Button } from '@/components/Button';
-import { TransactionItem } from '@/components/TransactionItem';
+import { Header } from '@/components/Header';
+import { TransactionItem, type TransactionItemProps } from '@/components/TransactionItem';
+import { useMarketPrice } from '@/hooks/use-market-price';
+import { useTransactions } from '@/hooks/use-transactions';
+import { useWallet } from '@/hooks/use-wallet';
 import { useAuthStore } from '@/store/auth-store';
+import { formatBtc, formatCurrencyBRL, formatTransactionDate } from '@/utils/format';
+import type { Transaction } from '@/services/transactions';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import * as S from './styles';
-import { Header } from '@/components/Header';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { mockTransactions } from './mock-transactions';
+
+function toTransactionItemProps(transaction: Transaction): TransactionItemProps & { id: string } {
+  const isBuy = transaction.type === 'buy';
+
+  return {
+    id: String(transaction.id),
+    kind: transaction.type,
+    title: isBuy ? 'Compra de BTC' : 'Venda de BTC',
+    date: formatTransactionDate(transaction.created_at),
+    amountLabel: `${isBuy ? '−' : '+'}${formatCurrencyBRL(transaction.brl_amount)}`,
+    btcAmountLabel: formatBtc(transaction.btc_amount),
+  };
+}
 
 export function Home() {
-  const name = useAuthStore((state) => state.user?.name);
+  const router = useRouter();
+  const theme = useTheme();
   const clearSession = useAuthStore((state) => state.clearSession);
+
+  const wallet = useWallet();
+  const market = useMarketPrice();
+  const transactions = useTransactions({ per_page: 2 });
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await Promise.all([wallet.refetch(), market.refetch(), transactions.refetch()]);
+    setRefreshing(false);
+  }, [wallet, market, transactions]);
+
+  const brlBalance = wallet.data?.data.brl_balance;
+  const btcBalance = wallet.data?.data.btc_balance;
+  const btcPrice = market.data?.data.price;
+
+  const estimatedNetWorthLabel =
+    brlBalance !== undefined && btcBalance !== undefined && btcPrice !== undefined
+      ? formatCurrencyBRL(Number(brlBalance) + Number(btcBalance) * Number(btcPrice))
+      : '—';
+
+  const items = transactions.data?.data.map(toTransactionItemProps) ?? [];
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <S.Container>
+      <S.Container
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor={theme.colors.primary}
+            colors={[theme.colors.primary]}
+          />
+        }
+      >
         <Header variant="walet" title="Sua carteira" />
         <S.Card>
           <S.TitleCard>Patrimônio estimado</S.TitleCard>
-          <S.PriceCard>R$ 10.622,50</S.PriceCard>
+          <S.PriceCard>{estimatedNetWorthLabel}</S.PriceCard>
           <S.SubtitleCard>Ambiente de simulação</S.SubtitleCard>
         </S.Card>
         <S.ViewBalances>
@@ -31,7 +84,9 @@ export function Home() {
               </S.CircleIcon>
               <S.ViewBalanceInternalData>
                 <S.TexTitletCircle>Saldo em reais</S.TexTitletCircle>
-                <S.TextDecriptionCircle>R$ 10.000,00</S.TextDecriptionCircle>
+                <S.TextDecriptionCircle>
+                  {brlBalance !== undefined ? formatCurrencyBRL(brlBalance) : '—'}
+                </S.TextDecriptionCircle>
               </S.ViewBalanceInternalData>
             </S.ViewBalanceInternal>
           </S.CardBalanceBRL>
@@ -42,7 +97,9 @@ export function Home() {
               </S.CircleIcon>
               <S.ViewBalanceInternalData>
                 <S.TexTitletCircle>Bitcoin</S.TexTitletCircle>
-                <S.TextDecriptionCircle>0,00250000 BTC</S.TextDecriptionCircle>
+                <S.TextDecriptionCircle>
+                  {btcBalance !== undefined ? formatBtc(btcBalance) : '—'}
+                </S.TextDecriptionCircle>
               </S.ViewBalanceInternalData>
             </S.ViewBalanceInternal>
           </S.CardBalanceBTC>
@@ -58,12 +115,17 @@ export function Home() {
             </S.ViewBalanceInternalData>
           </S.ViewBalanceInternal>
           <S.BalancesData>
-            <S.PriceCardPainel>R$ 200.000,00</S.PriceCardPainel>
-            <S.SubtitleCardPainel>+ 5,00%</S.SubtitleCardPainel>
+            <S.PriceCardPainel>
+              {btcPrice !== undefined ? formatCurrencyBRL(btcPrice) : '—'}
+            </S.PriceCardPainel>
           </S.BalancesData>
         </S.CardPainelBTC>
 
-        <Button title="Comprar Bitcoin" variant="primary" onPress={clearSession} />
+        <Button
+          title="Comprar Bitcoin"
+          variant="primary"
+          onPress={() => router.push('/negociar')}
+        />
         {/* <Button title="Sair" variant="outline" onPress={clearSession} /> */}
 
         <S.SectionHeaderRow>
@@ -74,7 +136,7 @@ export function Home() {
         </S.SectionHeaderRow>
 
         <FlashList
-          data={mockTransactions}
+          data={items}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <TransactionItem
@@ -86,6 +148,11 @@ export function Home() {
             />
           )}
           ItemSeparatorComponent={() => <S.ItemSeparator />}
+          ListEmptyComponent={
+            transactions.isLoading ? null : (
+              <S.EmptyListText>Nenhuma movimentação ainda.</S.EmptyListText>
+            )
+          }
           scrollEnabled={false}
         />
       </S.Container>

@@ -170,3 +170,9 @@ export const ItemSeparator = styled.View`
   height: 1px;
   background-color: ${({ theme }) => theme.colors.border};
 `;
+
+export const EmptyListText = styled.Text`
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 14px;
+  padding-vertical: ${({ theme }) => theme.spacing.md}px;
+`;

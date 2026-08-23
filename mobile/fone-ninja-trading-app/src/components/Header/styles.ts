@@ -13,16 +13,15 @@ export const ViewContainer = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
-  `;
+`;
 
-  export const ViewLeft = styled.View`
+export const ViewLeft = styled.View`
   align-items: start;
   justify-content: space-between;
-  `;
+`;
 
 export const ViewRight = styled.View<ItemVariant>`
-  flex-direction: ${({ variant }) =>
-    variant === 'negotiate' ? 'column' : 'row'};
+  flex-direction: ${({ variant }) => (variant === 'negotiate' ? 'column' : 'row')};
   align-items:   flex-end;
 `;
 
@@ -44,18 +43,12 @@ export const TextPrice = styled.Text`
   font-weight: 700;
 `;
 
-export const TextPorcentage = styled.Text`
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 12px;
-  font-weight: 700;
-`;
-
 export const ViewOperations = styled.View`
   flex-direction: row;
   justify-content: space-between;
   padding: ${({ theme }) => theme.spacing.sm}px;
   border-radius: 20px;
-  background-color: ${({ theme,  }) => theme.colors.backgroundSelected };
+  background-color: ${({ theme }) => theme.colors.backgroundSelected};
   bottom: 20px;
 `;
 
