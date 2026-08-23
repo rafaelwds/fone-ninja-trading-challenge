@@ -19,6 +19,7 @@ export type ColorTokens = {
   // Estados
   success: string;
   danger: string;
+  dangerSoft: string;
 
   // Bitcoin
   bitcoin: string;
@@ -51,6 +52,7 @@ export const lightColors: ColorTokens = {
   // Estados
   success: '#087A57',
   danger: '#C54848',
+  dangerSoft: '#FBE8E8',
 
   // Bitcoin
   bitcoin: '#F2A338',
@@ -83,6 +85,7 @@ export const darkColors: ColorTokens = {
   // Estados
   success: '#40C99B',
   danger: '#FF7777',
+  dangerSoft: '#3A2020',
 
   // Bitcoin
   bitcoin: '#F2A338',

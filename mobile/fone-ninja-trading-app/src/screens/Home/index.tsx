@@ -1,10 +1,14 @@
+import { FlashList } from '@shopify/flash-list';
+import { Link } from 'expo-router';
+
 import { Button } from '@/components/Button';
+import { TransactionItem } from '@/components/TransactionItem';
 import { useAuthStore } from '@/store/auth-store';
 
 import * as S from './styles';
 import { Header } from '@/components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text } from 'react-native';
+import { mockTransactions } from './mock-transactions';
 
 export function Home() {
   const name = useAuthStore((state) => state.user?.name);
@@ -61,6 +65,29 @@ export function Home() {
 
         <Button title="Comprar Bitcoin" variant="primary" onPress={clearSession} />
         {/* <Button title="Sair" variant="outline" onPress={clearSession} /> */}
+
+        <S.SectionHeaderRow>
+          <S.SectionTitle>Últimas movimentações</S.SectionTitle>
+          <Link href="/historico">
+            <S.SeeAllLink>Ver todas</S.SeeAllLink>
+          </Link>
+        </S.SectionHeaderRow>
+
+        <FlashList
+          data={mockTransactions}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TransactionItem
+              kind={item.kind}
+              title={item.title}
+              date={item.date}
+              amountLabel={item.amountLabel}
+              btcAmountLabel={item.btcAmountLabel}
+            />
+          )}
+          ItemSeparatorComponent={() => <S.ItemSeparator />}
+          scrollEnabled={false}
+        />
       </S.Container>
     </SafeAreaView>
   );

@@ -6,10 +6,10 @@ type ItemBalance = {
 
 export const Container = styled.ScrollView.attrs(() => ({
   contentContainerStyle: {
-    flexGrow: 1
-  }
+    flexGrow: 1,
+  },
 }))`
-padding: 0 ${({ theme }) => theme.spacing.md}px ;
+  padding: 0 ${({ theme }) => theme.spacing.md}px;
   background-color: ${({ theme }) => theme.colors.background};
 `;
 
@@ -89,10 +89,8 @@ export const CircleIcon = styled.View<ItemBalance>`
   align-items: center;
   justify-content: center;
   background-color: ${({ theme, typeBalance }) =>
-    typeBalance === 'BRL'
-      ? theme.colors.primaryPressed
-      : theme.colors.bitcoin};
-      margin-right: ${({ theme }) => theme.spacing.sm}px;
+    typeBalance === 'BRL' ? theme.colors.primaryPressed : theme.colors.bitcoin};
+  margin-right: ${({ theme }) => theme.spacing.sm}px;
 `;
 
 export const TextCircleIcon = styled.Text`
@@ -101,20 +99,20 @@ export const TextCircleIcon = styled.Text`
   font-weight: 700;
 `;
 
-export const TexTitletCircle= styled.Text`
+export const TexTitletCircle = styled.Text`
   color: ${({ theme }) => theme.colors.shadow};
   font-size: 12px;
   font-weight: 400;
 `;
 
-export const TextDecriptionCircle= styled.Text`
+export const TextDecriptionCircle = styled.Text`
   color: ${({ theme }) => theme.colors.shadow};
   font-size: 12px;
   font-weight: 700;
-   margin-top: 6px;
-  `;
+  margin-top: 6px;
+`;
 
-  export const CardPainelBTC = styled.View`
+export const CardPainelBTC = styled.View`
   flex-direction: row;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.colors.onTint};
@@ -146,4 +144,29 @@ export const SubtitleCardPainel = styled.Text`
   font-size: 14px;
   font-weight: 700;
   margin-top: ${({ theme }) => theme.spacing.sm}px;
+`;
+
+export const SectionHeaderRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: ${({ theme }) => theme.spacing.lg}px;
+  margin-bottom: ${({ theme }) => theme.spacing.sm}px;
+`;
+
+export const SectionTitle = styled.Text`
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 16px;
+  font-weight: 700;
+`;
+
+export const SeeAllLink = styled.Text`
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 14px;
+  font-weight: 700;
+`;
+
+export const ItemSeparator = styled.View`
+  height: 1px;
+  background-color: ${({ theme }) => theme.colors.border};
 `;
