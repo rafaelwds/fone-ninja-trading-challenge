@@ -22,14 +22,7 @@ export const fonts = Platform.select({
 })!;
 
 export type TypeVariant =
-  | 'default'
-  | 'title'
-  | 'subtitle'
-  | 'small'
-  | 'smallBold'
-  | 'link'
-  | 'linkPrimary'
-  | 'code';
+  'default' | 'title' | 'subtitle' | 'small' | 'smallBold' | 'link' | 'linkPrimary' | 'code';
 
 export const typography = {
   default: { fontSize: 16, lineHeight: 24, fontWeight: '500' },
