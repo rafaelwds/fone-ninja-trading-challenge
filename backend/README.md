@@ -5,9 +5,11 @@ plataforma simulada de compra e venda de Bitcoin. O escopo desta pasta e **exclu
 backend** (API). Nao ha frontend, aplicativo mobile ou integracao com corretoras reais - todo o
 mercado de Bitcoin e simulado.
 
-> Este e um monorepo: o backend vive em `backend/` (esta pasta) e o aplicativo mobile vivera em
-> `mobile/`, na raiz do repositorio. Todos os comandos deste README assumem que voce esta com o
-> diretorio de trabalho em `backend/`.
+> Este e um monorepo: o backend vive em `backend/` (esta pasta) e o aplicativo mobile vive em
+> [`mobile/fone-ninja-trading-app/`](../mobile/fone-ninja-trading-app), na raiz do repositorio
+> (ver o [README do mobile](../mobile/fone-ninja-trading-app/README.md) para instalacao e
+> execucao). Todos os comandos deste README assumem que voce esta com o diretorio de trabalho em
+> `backend/`.
 
 ## 1. Apresentacao do projeto
 
