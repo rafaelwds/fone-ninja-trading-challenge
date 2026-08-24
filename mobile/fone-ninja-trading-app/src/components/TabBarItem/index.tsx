@@ -5,7 +5,7 @@ import { useTheme } from 'styled-components/native';
 import * as S from './styles';
 
 // Precisa bater com o numero de <Tabs.Screen> em src/app/(tabs)/_layout.tsx.
-const TAB_COUNT = 3;
+const TAB_COUNT = 4;
 
 export type TabBarItemProps = {
   label: string;

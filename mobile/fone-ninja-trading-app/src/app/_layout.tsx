@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 
 import { useAuthStore } from '@/store/auth-store';
+import { useThemeStore } from '@/store/theme-store';
 import { AppThemeProvider } from '@/theme/provider';
 
 // Uma unica instancia por vida do app: o QueryClient guarda o cache de todas
@@ -18,10 +19,12 @@ const queryClient = new QueryClient();
 export default function RootLayout() {
   const user = useAuthStore((state) => state.user);
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const themeHasHydrated = useThemeStore((state) => state.hasHydrated);
 
-  // Espera o SecureStore/localStorage ser lido antes de decidir a rota, senao
-  // a gente mostraria o login por 1 frame mesmo quando ja existe sessao salva.
-  if (!hasHydrated) {
+  // Espera o SecureStore/localStorage ser lido antes de decidir a rota/tema, senao
+  // a gente mostraria o login por 1 frame mesmo quando ja existe sessao salva, ou
+  // um flash do tema errado quando ha uma preferencia de tema salva.
+  if (!hasHydrated || !themeHasHydrated) {
     return null;
   }
 

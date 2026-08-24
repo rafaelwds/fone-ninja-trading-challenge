@@ -10,7 +10,6 @@ import { TransactionItem } from '@/components/TransactionItem';
 import { useMarketPrice } from '@/hooks/use-market-price';
 import { useTransactions } from '@/hooks/use-transactions';
 import { useWallet } from '@/hooks/use-wallet';
-import { useAuthStore } from '@/store/auth-store';
 import { formatBtc, formatCurrencyBRL } from '@/utils/format';
 import { toTransactionItemProps } from '@/utils/transaction-item';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,7 +19,6 @@ import * as S from './styles';
 export function Home() {
   const router = useRouter();
   const theme = useTheme();
-  const clearSession = useAuthStore((state) => state.clearSession);
 
   const wallet = useWallet();
   const market = useMarketPrice();
@@ -113,7 +111,6 @@ export function Home() {
           variant="primary"
           onPress={() => router.push('/negociar')}
         />
-        {/* <Button title="Sair" variant="outline" onPress={clearSession} /> */}
 
         <S.SectionHeaderRow>
           <S.SectionTitle>Últimas movimentações</S.SectionTitle>

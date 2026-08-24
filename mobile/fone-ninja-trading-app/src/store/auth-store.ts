@@ -1,9 +1,9 @@
-import * as SecureStore from 'expo-secure-store';
-import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import type { AuthUser } from '@/services/auth';
+
+import { secureStorage } from './secure-storage';
 
 /**
  * Estado global de autenticacao ("quem esta logado agora").
@@ -24,37 +24,6 @@ type AuthState = {
   setHasHydrated: (value: boolean) => void;
 };
 
-/**
- * Adaptador para o middleware `persist` do zustand usar o SecureStore do Expo
- * (Keychain no iOS / Keystore no Android) em vez do AsyncStorage puro - o
- * token de autenticacao e sensivel, entao guardamos ele de forma criptografada.
- *
- * SecureStore nao existe na Web (nao ha Keychain/Keystore no navegador), entao
- * ali caimos para `localStorage` - menos seguro, mas suficiente pra esta demo.
- */
-const secureStorage = {
-  getItem: (name: string) => {
-    if (Platform.OS === 'web') {
-      return Promise.resolve(globalThis.localStorage?.getItem(name) ?? null);
-    }
-    return SecureStore.getItemAsync(name);
-  },
-  setItem: (name: string, value: string) => {
-    if (Platform.OS === 'web') {
-      globalThis.localStorage?.setItem(name, value);
-      return Promise.resolve();
-    }
-    return SecureStore.setItemAsync(name, value);
-  },
-  removeItem: (name: string) => {
-    if (Platform.OS === 'web') {
-      globalThis.localStorage?.removeItem(name);
-      return Promise.resolve();
-    }
-    return SecureStore.deleteItemAsync(name);
-  },
-};
-
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
@@ -67,6 +36,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'fone-ninja-auth',
+      // O token e sensivel, entao guardamos ele de forma criptografada (Keychain/Keystore).
       storage: createJSONStorage(() => secureStorage),
       // So persistimos user/token; `hasHydrated` e recalculado a cada boot do app.
       partialize: (state) => ({ user: state.user, token: state.token }),
