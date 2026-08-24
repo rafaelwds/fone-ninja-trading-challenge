@@ -106,7 +106,7 @@ export function Negotiate() {
               {mode === 'buy' ? (
                 <S.AmountInput
                   value={formatCentsToDecimalDisplay(brlDigits)}
-                  onChangeText={(text) => setBrlDigits(text.replace(/\D/g, ''))}
+                  onChangeText={(text) => setBrlDigits(text.replace(/\D/g, '').slice(0, 10))}
                   keyboardType="number-pad"
                   editable={!buyMutation.isPending}
                 />
@@ -123,7 +123,7 @@ export function Negotiate() {
 
             <S.PreviewRow>
               <S.PreviewLabel>Você recebe aproximadamente</S.PreviewLabel>
-              <S.PreviewValue>
+              <S.PreviewValue numberOfLines={1}>
                 {mode === 'buy' ? formatBtc(estimatedBtc) : formatCurrencyBRL(estimatedBrl)}
               </S.PreviewValue>
             </S.PreviewRow>

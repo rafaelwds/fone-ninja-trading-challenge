@@ -24,7 +24,7 @@ export function Home() {
 
   const wallet = useWallet();
   const market = useMarketPrice();
-  const transactions = useTransactions({ per_page: 2 });
+  const transactions = useTransactions({ per_page: 4 });
 
   const [refreshing, setRefreshing] = useState(false);
 

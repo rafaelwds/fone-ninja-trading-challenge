@@ -51,14 +51,20 @@ export function formatCentsToDecimalDisplay(digitsOnly: string): string {
   return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-/** Filtra um texto digitado para no maximo digitos + uma virgula, com ate 8 casas decimais (BTC). */
+/**
+ * Filtra um texto digitado para no maximo digitos + uma virgula, com ate 8 casas
+ * decimais (BTC). A parte inteira e limitada a 6 digitos (ate 999.999 BTC, bem
+ * acima de qualquer saldo real) pra nunca deixar o valor digitado estourar o
+ * layout do input.
+ */
 export function sanitizeDecimalInput(text: string): string {
   const cleaned = text.replace(/[^\d,]/g, '');
   const [intPart, ...rest] = cleaned.split(',');
+  const limitedIntPart = intPart.slice(0, 6);
 
   if (rest.length === 0) {
-    return intPart;
+    return limitedIntPart;
   }
 
-  return `${intPart},${rest.join('').slice(0, 8)}`;
+  return `${limitedIntPart},${rest.join('').slice(0, 8)}`;
 }

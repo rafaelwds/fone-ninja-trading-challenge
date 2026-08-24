@@ -1,13 +1,13 @@
 import styled from 'styled-components/native';
 
-export const Container = styled.View<{ $focused: boolean }>`
+export const Container = styled.View<{ $focused: boolean; $width: number }>`
   align-items: center;
   justify-content: center;
   gap: 3px;
-  min-width: 84px;
+  width: ${({ $width }) => $width}px;
   height: 48px;
   padding-vertical: ${({ theme }) => theme.spacing.sm}px;
-  padding-horizontal: ${({ theme }) => theme.spacing.md}px;
+  padding-horizontal: ${({ theme }) => theme.spacing.xs}px;
   border-radius: ${({ theme }) => theme.radius.sm}px;
   background-color: ${({ theme, $focused }) =>
     $focused ? theme.colors.backgroundSelected : 'transparent'};

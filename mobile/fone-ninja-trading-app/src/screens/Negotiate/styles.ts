@@ -101,11 +101,15 @@ export const PreviewRow = styled.View`
 `;
 
 export const PreviewLabel = styled.Text`
+  flex-shrink: 0;
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: 14px;
 `;
 
 export const PreviewValue = styled.Text`
+  flex-shrink: 1;
+  margin-left: ${({ theme }) => theme.spacing.sm}px;
+  text-align: right;
   color: ${({ theme }) => theme.colors.text};
   font-size: 14px;
   font-weight: 700;

@@ -70,6 +70,14 @@ describe('sanitizeDecimalInput', () => {
   it('sem virgula, devolve so os digitos', () => {
     expect(sanitizeDecimalInput('123')).toBe('123');
   });
+
+  it('limita a parte inteira a 6 digitos, pra nao estourar o layout do input', () => {
+    expect(sanitizeDecimalInput('8558886588588')).toBe('855888');
+  });
+
+  it('limita a parte inteira mesmo com casas decimais digitadas', () => {
+    expect(sanitizeDecimalInput('12345678,9')).toBe('123456,9');
+  });
 });
 
 describe('formatTransactionDate', () => {
