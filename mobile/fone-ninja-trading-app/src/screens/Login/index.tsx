@@ -38,7 +38,7 @@ export function Login() {
         <S.Card>
           <S.Header>
             <S.Avatar>
-              <S.AvatarLabel>FN</S.AvatarLabel>
+              <S.AvatarLabel>FNT</S.AvatarLabel>
             </S.Avatar>
             <S.Brand>Fone Ninja Trade</S.Brand>
             <S.DemoBadge>
@@ -84,10 +84,6 @@ export function Login() {
             {errorMessage && <S.ErrorText>{errorMessage}</S.ErrorText>}
 
             <Button title="Entrar" onPress={handleSubmit} loading={loginMutation.isPending} />
-
-            <S.CreateAccountLink onPress={() => {}}>
-              <S.CreateAccountLabel>Criar uma conta</S.CreateAccountLabel>
-            </S.CreateAccountLink>
           </S.FormBox>
         </S.Card>
       </S.Screen>
