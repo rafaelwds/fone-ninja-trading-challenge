@@ -69,33 +69,50 @@ Para descobrir o IP da sua maquina na rede local: `ipconfig getifaddr en0` (macO
 (Windows, campo "Endereco IPv4"). O celular precisa estar na **mesma rede Wi-Fi** do computador
 para conseguir alcancar esse IP.
 
-> Depois de editar o `.env`, reinicie o Metro com cache limpo (`npx expo start -c`) - variaveis
+> Depois de editar o `.env`, reinicie o Metro com cache limpo (`npx expo start --clear`) - variaveis
 > `EXPO_PUBLIC_*` sao embutidas no bundle em tempo de build, entao um simples reload nao pega a
 > mudanca.
 
 ## 6. Executando o app
 
-```bash
-npm start
-```
+Este projeto usa o **Bare Workflow** do Expo (ha pastas nativas `ios/`/`android/` geradas no
+projeto), entao o jeito recomendado de rodar é compilar e instalar o app nativo diretamente, em
+vez de abrir via Expo Go.
 
-Isso abre o Metro Bundler com um menu interativo no terminal. A partir dele:
-
-- Pressione `w` para abrir no **navegador**.
-- Pressione `i` para abrir no **Simulador iOS** (precisa de Xcode; abre automaticamente se ja
-  houver um simulador instalado).
-- Pressione `a` para abrir no **Emulador Android** (precisa do Android Studio com um AVD já criado
-  e rodando).
-- Escaneie o **QR code** exibido no terminal com o app **Expo Go** para rodar no seu **celular
-  fisico** (lembre-se de ajustar o `.env` como na tabela acima antes disso).
-
-Atalhos equivalentes direto por comando, sem passar pelo menu:
+**Web** - roda direto no navegador, sem nenhuma instalacao nativa:
 
 ```bash
-npm run web       # navegador
-npm run ios       # simulador iOS
-npm run android   # emulador Android
+npm run web
 ```
+
+**iOS** - compila e instala no Simulador (precisa de um Mac com Xcode instalado):
+
+```bash
+npx expo run:ios
+```
+
+**Android** - compila e instala no Emulador/dispositivo (precisa do Android Studio com um AVD
+configurado, ou um aparelho Android conectado via USB com depuracao ativada):
+
+```bash
+npx expo run:android
+```
+
+Esses dois comandos fazem o build nativo completo e ja abrem o app instalado automaticamente - só
+sao necessarios a **primeira vez** (ou depois de instalar/atualizar uma lib nativa). Nas proximas
+vezes, com o app ja instalado no simulador/emulador, basta subir o servidor de novo:
+
+```bash
+npx expo start --clear
+```
+
+(a flag `--clear` limpa o cache do Metro - util sempre que voce mexer no `.env` ou em alguma
+configuracao nativa) e abrir o app manualmente no simulador/emulador, que ja vai conectar nele.
+
+> **Celular fisico sem montar o app nativo?** Tambem e possivel usar o app **Expo Go** (baixe na
+> App Store/Play Store) e escanear o QR code exibido por `npx expo start` - mais rapido pra uma
+> primeira olhada, mas sem suporte a modulos nativos customizados do projeto. Lembre-se de ajustar
+> o `.env` como na tabela acima antes disso.
 
 ## 7. Criando uma conta para testar
 
@@ -151,6 +168,6 @@ npx prettier --check .  # formatacao
 - **"Não foi possível conectar à API"** - o `EXPO_PUBLIC_API_URL` no `.env` provavelmente esta
   errado para o jeito que voce esta rodando o app (ver tabela na secao 5), ou o backend nao esta
   no ar (`docker compose ps` dentro de `backend/` deve mostrar os 4 containers `Up`).
-- **Alterei o `.env` e nada mudou** - reinicie o Metro com `npx expo start -c` (cache limpo).
+- **Alterei o `.env` e nada mudou** - reinicie o Metro com `npx expo start --clear` (cache limpo).
 - **Erro de tipos do Jest ao rodar `tsc`** - rode `npm install` de novo; o `tsconfig.json` ja
   declara `"types": ["jest", "node"]`.

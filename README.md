@@ -151,31 +151,45 @@ Para descobrir o IP da sua maquina na rede local: `ipconfig getifaddr en0` (macO
 (Windows, campo "Endereco IPv4"). O celular precisa estar na **mesma rede Wi-Fi** do computador
 para conseguir alcancar esse IP.
 
-> Depois de editar o `.env`, reinicie o Metro com cache limpo (`npx expo start -c`) - variaveis
+> Depois de editar o `.env`, reinicie o Metro com cache limpo (`npx expo start --clear`) - variaveis
 > `EXPO_PUBLIC_*` sao embutidas no bundle em tempo de build, entao um simples reload nao pega a
 > mudanca.
 
 ### 2.3. Executando o app
 
-```bash
-npm start
-```
+Este projeto usa o **Bare Workflow** do Expo (ha pastas nativas `ios/`/`android/` geradas no
+projeto), entao o jeito recomendado de rodar é compilar e instalar o app nativo diretamente.
 
-Isso abre o Metro Bundler com um menu interativo no terminal. A partir dele:
-
-- Pressione `w` para abrir no **navegador**.
-- Pressione `i` para abrir no **Simulador iOS** (precisa de Xcode).
-- Pressione `a` para abrir no **Emulador Android** (precisa do Android Studio com um AVD rodando).
-- Escaneie o **QR code** exibido no terminal com o app **Expo Go** para rodar no seu **celular
-  fisico** (ajuste o `.env` como na tabela da secao 2.2 antes disso).
-
-Atalhos equivalentes direto por comando, sem passar pelo menu:
+**Web** - roda direto no navegador, sem nenhuma instalacao nativa:
 
 ```bash
-npm run web       # navegador
-npm run ios       # simulador iOS
-npm run android   # emulador Android
+npm run web
 ```
+
+**iOS** - compila e instala no Simulador (precisa de um Mac com Xcode instalado):
+
+```bash
+npx expo run:ios
+```
+
+**Android** - compila e instala no Emulador/dispositivo (precisa do Android Studio com um AVD
+configurado, ou um aparelho Android conectado via USB com depuracao ativada):
+
+```bash
+npx expo run:android
+```
+
+Esses dois comandos só sao necessarios a **primeira vez** (ou apos instalar/atualizar uma lib
+nativa) - eles fazem o build nativo completo e ja abrem o app instalado. Nas proximas vezes, com o
+app ja instalado, basta subir o servidor de novo e abrir o app manualmente no simulador/emulador:
+
+```bash
+npx expo start --clear
+```
+
+> **Celular fisico sem montar o app nativo?** Tambem e possivel usar o app **Expo Go** e escanear
+> o QR code exibido por `npx expo start` - mais rapido, mas sem suporte a modulos nativos
+> customizados do projeto. Ajuste o `.env` como na tabela da secao 2.2 antes disso.
 
 Ao abrir, faca login com o usuario criado na secao 1.5.
 
@@ -197,7 +211,7 @@ componentes compartilhados e as telas de Login e Negociar.
 - **"Não foi possível conectar à API"** no app mobile - o `EXPO_PUBLIC_API_URL` no `.env` (secao
   2.2) provavelmente esta errado para o jeito que voce esta rodando o app, ou o backend nao esta
   no ar (`docker compose ps` dentro de `backend/` deve mostrar os 4 containers `Up`).
-- **Alterei o `.env` do mobile e nada mudou** - reinicie com `npx expo start -c` (cache limpo).
+- **Alterei o `.env` do mobile e nada mudou** - reinicie com `npx expo start --clear` (cache limpo).
 - **`docker compose up` falha ou a porta 8000/3307/6379 ja esta em uso** - outro processo na sua
   maquina esta usando essa porta; pare-o ou ajuste as portas no `docker-compose.yml`.
 - **Erro ao logar no app ("Credenciais inválidas")** - confira se voce realmente criou o usuario
