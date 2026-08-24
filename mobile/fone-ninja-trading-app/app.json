@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.rafaelwds.foneninjatradingapp"
+      "bundleIdentifier": "com.rafaelwds.foneninjatradingapp",
+      "appleTeamId": "VYGTYC98S3"
     },
     "android": {
       "adaptiveIcon": {

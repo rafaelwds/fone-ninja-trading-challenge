@@ -12,9 +12,11 @@ export type HeaderProps = {
   subtitle?: string;
   /** Preco atual do BTC ja formatado (ex: "R$ 214.570,55"), usado na variante "negociar". */
   priceLabel?: string;
+  /** Quantidade total de transacoes do usuario, usado na variante "history". */
+  operationsCount?: number;
 };
 
-export function Header({ variant, title, priceLabel }: HeaderProps) {
+export function Header({ variant, title, priceLabel, operationsCount }: HeaderProps) {
   const name = useAuthStore((state) => state.user?.name);
 
   return (
@@ -56,7 +58,9 @@ export function Header({ variant, title, priceLabel }: HeaderProps) {
           </S.ViewLeft>
           <S.ViewRight>
             <S.ViewOperations>
-              <S.TextOperations>3 operações</S.TextOperations>
+              <S.TextOperations>
+                {operationsCount ?? 0} {operationsCount === 1 ? 'operação' : 'operações'}
+              </S.TextOperations>
             </S.ViewOperations>
           </S.ViewRight>
         </S.ViewContainer>

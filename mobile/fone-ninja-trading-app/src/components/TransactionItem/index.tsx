@@ -27,6 +27,7 @@ export function TransactionItem({
     <S.Container>
       <S.IconCircle $kind={kind}>
         <Ionicons
+          testID={isBuy ? 'transaction-icon-buy' : 'transaction-icon-sell'}
           name={isBuy ? 'arrow-down' : 'arrow-up'}
           size={18}
           color={isBuy ? theme.colors.danger : theme.colors.success}

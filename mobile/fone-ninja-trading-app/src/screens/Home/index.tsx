@@ -6,29 +6,16 @@ import { useTheme } from 'styled-components/native';
 
 import { Button } from '@/components/Button';
 import { Header } from '@/components/Header';
-import { TransactionItem, type TransactionItemProps } from '@/components/TransactionItem';
+import { TransactionItem } from '@/components/TransactionItem';
 import { useMarketPrice } from '@/hooks/use-market-price';
 import { useTransactions } from '@/hooks/use-transactions';
 import { useWallet } from '@/hooks/use-wallet';
 import { useAuthStore } from '@/store/auth-store';
-import { formatBtc, formatCurrencyBRL, formatTransactionDate } from '@/utils/format';
-import type { Transaction } from '@/services/transactions';
+import { formatBtc, formatCurrencyBRL } from '@/utils/format';
+import { toTransactionItemProps } from '@/utils/transaction-item';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import * as S from './styles';
-
-function toTransactionItemProps(transaction: Transaction): TransactionItemProps & { id: string } {
-  const isBuy = transaction.type === 'buy';
-
-  return {
-    id: String(transaction.id),
-    kind: transaction.type,
-    title: isBuy ? 'Compra de BTC' : 'Venda de BTC',
-    date: formatTransactionDate(transaction.created_at),
-    amountLabel: `${isBuy ? '−' : '+'}${formatCurrencyBRL(transaction.brl_amount)}`,
-    btcAmountLabel: formatBtc(transaction.btc_amount),
-  };
-}
 
 export function Home() {
   const router = useRouter();
